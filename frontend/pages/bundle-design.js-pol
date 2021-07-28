@@ -1,0 +1,736 @@
+import React, { Component } from 'react';
+import { Layout, Page, Card, Form, FormLayout, RadioButton, Icon, Button, TextStyle, TextField, Select, Stack, List, TextContainer, VideoThumbnail, MediaCard, Modal, Popover, ActionList } from '@shopify/polaris';
+import AppFooter from './appfooter';
+import AppNavigation from './appnavigation';
+import DataTable from 'react-data-table-component';
+import { ViewMajor, EditMajor, AnalyticsMajor, SearchMinor } from '@shopify/polaris-icons';
+import gql from 'graphql-tag';
+import { Query } from 'react-apollo';
+import { Context } from '@shopify/app-bridge-react';
+import { Redirect } from '@shopify/app-bridge/actions';
+import { baseUrl } from './baseUrl';
+import Link from 'next/link';
+import router from 'next/router'
+
+
+const axios = require('axios');
+const store = require('store-js');
+var isSelected = "";
+var SelectedBundlelength = 0;
+var bdlarray = [];
+var InfiniteLoop = '';
+var setglobal = '';
+const data = [
+    {
+        id: 1,
+        view: <Icon source={ViewMajor} color="base" />,
+        bundle_detail: <p>Bundle name</p>,
+        bundle_tag: <p>Bundle Tag</p>,
+        bundle_date: <p>Bundle Date</p>,
+        bundle_status: <p>Bundle Status</p>,
+        edit: <Icon source={EditMajor} color="primary" />,
+        stats: <Icon source={AnalyticsMajor} color="decorative" />
+    },
+];
+
+const columns = [
+    { name: 'View', selector: 'view', sortable: false, ignoreRowClick: true, allowOverflow: true,button: true, },
+    { name: 'Title', selector: 'bundle_detail', sortable: true, grow: 450 },
+    { name: 'Tags', selector: 'bundle_tag', sortable: true, grow: 450 },
+    { name: 'Date', selector: 'bundle_date', sortable: true, grow: 450 },
+    { name: 'Status', selector: 'bundle_status', sortable: true, grow: 450 },
+    { name: 'id', selector: 'rid', omit: true, },
+    { name: 'Edit', selector: 'edit'},
+    { name: 'Stats', selector: 'stats'},
+];
+
+const popupcolumns = [
+    { name: 'View', selector: 'view', sortable: false, ignoreRowClick: true, allowOverflow: true,button: true, },
+    { name: 'Title', selector: 'bundle_detail', sortable: true, grow: 450 },
+    { name: 'Tags', selector: 'bundle_tag', sortable: true, grow: 450 },
+    { name: 'Date', selector: 'bundle_date', sortable: true, grow: 450 },
+    { name: 'id', selector: 'rid', omit: true, },
+    { name: 'Edit', selector: 'edit', className: "Actionbuttons"},
+    { name: 'Stats', selector: 'stats', className: "Actionbuttons",},
+];
+
+const handleChange = (state) => {
+    // You can use setState or dispatch with something like Redux so we can use the retrieved data
+    console.log('Selected Rows: ', state.selectedRows);
+
+};
+
+
+// Toggle the state so React Table Table changes to `clearSelectedRows` are triggered
+const handleClearRows = () => {
+    this.setState({ toggledClearRows: !this.state.toggledClearRows })
+}
+
+// const handleEmailChange = useCallback((value) => setEmail(value), []);
+
+
+const GET_SHOP_NAME = gql`
+    query {
+        shop {
+            name
+            myshopifyDomain
+        }
+    }
+`;
+
+const ActionOptions = [
+    {label: 'Enable', value: 'enableBundle'},
+    {label: 'Disable', value: 'disableBundle'},
+    {label: 'Delete', value: 'deleteBundle'},
+];
+
+
+class BundleDesign extends Component {
+
+    state = {
+        toggledClearRows: false,
+        search: '',
+        filter: '',
+        nameOptions: [
+            { label: 'Name', value: '1' },
+            { label: 'Tag', value: '2' },
+        ],
+        SelectedName: '',
+        dateOptions: [
+            { label: 'Date', value: '' },
+            { label: 'This Week', value: '1' },
+            { label: 'This Month', value: '2' },
+            { label: 'This Year', value: '3' },
+        ],
+        SelectedDate: '',
+        shopName: '',
+        data: [],
+        showModal: false,
+        showModalAction: false,
+        selectdBundles:null,
+        selectedAction:'',
+        activepopover: false,
+        selectedBundleRid:null
+    }
+    
+    handleImportedAction = () =>{
+        console.log('Exported action handleImportedAction');
+    }
+
+    handleExportedAction = () =>{
+        console.log('Exported action handleExportedAction');
+    }
+
+    toggleActive = () =>{
+        if(this.state.activepopover){
+            this.setState({ activepopover: true });
+        }else{
+            this.setState({ activepopover: false });
+        }      
+    }
+
+    handleSubmit = () => {
+        if (this.state.search == '') {
+            console.log('if')
+            return;
+        } else {
+            this.setState({
+                search: this.state.search,
+            });
+            console.log('submission', this.state);
+        }
+
+    }
+
+    handleChange = (field) => {
+        return (value) => this.setState({ [field]: value });
+    }
+
+    componentDidMount() {
+        // if(!store.get('bId')) {
+        //     alert('Please save the bundle from prev steps first');
+        //     return;
+        // }
+        // console.log(store.get('shopName'))
+    }
+
+    getBundlesByShop = () => {
+        var self = this;
+
+        console.log(store.get('shopName'))
+        console.log(this.state.shopName)
+
+        let shopName = '';
+
+        if (this.state.shopName === '' && store.get('shopName') !== undefined) {
+            console.log('store')
+            shopName = store.get('shopName');
+        }
+
+        if (store.get('shopName') === undefined && this.state.shopName !== '') {
+            console.log('shop')
+            shopName = this.state.shopName;
+        }
+
+
+        //console.log('shopName', shopName)
+
+        if (shopName !== '') {
+            axios.post(baseUrl + '/get-bundles-by-shop/' + shopName)
+                .then(function (response) {
+                    // handle success
+                    //console.log(response.data);
+                    if (response.data.responseCode == 200) {
+
+                        var data = [];
+                        var ddd = [];
+                        data = response.data.data;
+
+                        data.map((d, i) => {
+                            //console.log(d._id)
+                            var dangerText= "<b className='text_danger'>Disabled</b>";
+                            if(d.status==0){ var bd_status = "Disabled"; } else{var bd_status= "Enabled";}
+                            ddd[i] = {
+                                "id": d._id,
+                                "view": <Icon source={ViewMajor} color="decorative" color="base" />,
+                                "bundle_detail": d.bundleName,
+                                "bundle_tag": d.bundleTag,
+                                "bundle_date":  d.createdAt,
+                                "bundle_status": bd_status,
+                                "rid": d._id,
+                                "edit": <Button primary onClick={() => { store.set('bId', d._id); router.push('/edit-bundle-step-one'); } } ><Icon source={EditMajor} color="primary" /></Button>,
+                                "stats": <Button><Icon source={AnalyticsMajor} color="primary" /></Button>
+                            }
+                        })
+
+                        // onClick={() => store.set('bId', d._id)}
+
+                        self.setState({ data: ddd }, function () { })
+
+                    }
+                })
+                .catch(function (error) {
+                    // handle error
+                    console.log(error);
+                    // this.setState({ redirect: false }, function () { })
+                })
+        }
+    }
+
+    handleModal = (e, v) => {
+        console.log(e)
+        console.log(v)
+        if(v === 'bundle_visible') {
+            this.setState({ showModal: true })
+        } else {
+            this.setState({ showModal: false })
+        }
+    }
+    
+    handleActionModal = (e, v) => {
+        if(v === 'bundle_visible') {
+            this.setState({ showModalAction: true })
+        } else {
+            this.setState({ showModalAction: false })
+        }
+    }
+
+    handleChange1 = (state) => {
+        alert();
+        const abc = this;
+        // You can use setState or dispatch with something like Redux so we can use the retrieved data
+        //console.log('Selected Rows5: ', state.selectedRows);
+        var bdlarray = state.selectedRows;
+        console.log("seled Array ", bdlarray);
+        SelectedBundlelength = bdlarray.length;
+        //setCookie('selecteddd', state.selectedRows);
+
+        const stringData = bdlarray.reduce((result,item)=>{
+            return `${result}${item.id}|`
+        },"");
+
+
+        const ridStringData = bdlarray.reduce((result,item)=>{
+            return `${result}${item.rid}|`
+        },"");
+
+        //console.log("str is " + stringData);
+
+        console.log("--------");
+        console.log(state.selectedRows);
+
+        this.setState({
+            selectdBundles : state.selectedRows
+        }) 
+        
+        this.setState({
+            selectedBundleRid : ridStringData
+        })
+
+
+        store.set('selectedDatais', stringData);
+        isSelected = stringData;
+        //showContinueButton();
+        //this.setState({ isSelected: true })
+    };
+
+    handleSelectChange = (field) => {
+        return (value) => this.setState({ [field]: value });
+    }
+
+    btnaction_two = (field) =>{
+            var self = this;
+            var searchValue = this.state.search;
+            var searchName = this.state.SelectedName;
+            if(searchName == ''){
+                searchName = '1';
+            }            
+
+            if(InfiniteLoop == searchValue){
+                InfiniteLoop = '';
+            }else{
+                    console.log('no error in filter');
+                    axios.post(baseUrl + '/get-bundles-by-filter', {
+                        doSearch: searchValue,
+                        TypeSend: searchName,
+                        shop: store.get('shopName'),
+                    })
+                    .then(function (response) {
+                        InfiniteLoop = searchValue;
+                        if (response.data.responseCode == 200 || response.data.responseCode == 400) {
+                            var data = [];
+                            var ddd = [];
+                            data = response.data.data;
+                            data.map((d, i) => {
+                                if(d.status==0){ var bd_status = "Disabled"; } else{var bd_status= "Enabled";}
+                                ddd[i] = {
+                                    "id": d._id,
+                                    "view": <Icon source={ViewMajor} color="decorative" color="base" />,
+                                    "bundle_detail": d.bundleName,
+                                    "bundle_tag": d.bundleTag,
+                                    "bundle_date":  d.createdAt,
+                                    "bundle_status": bd_status,
+                                    "rid": d._id,
+                                    "edit": <Button primary onClick={() => { store.set('bId', d._id); router.push('/edit-bundle-step-one'); } } ><Icon source={EditMajor} color="primary" /></Button>,
+                                    "stats": <Button><Icon source={AnalyticsMajor} color="primary" /></Button>
+                                }
+                            })
+                            self.setState({ data: ddd });
+                        }
+                    })
+                    .catch(function (error) {
+                        // handle error
+                        console.log(error);
+                        // this.setState({ redirect: false }, function () { })
+                    })
+                
+            }
+
+            
+            return (value) => this.setState({ [field]: value });
+    }
+
+
+    btnaction = () =>{
+        console.log("I am clicked" + this.state.selectedAction);
+        console.log("rid:" + this.state.selectedBundleRid);
+        var str = this.state.selectedBundleRid;
+        var strarray= str.split('|');
+        console.log("strarray:" + strarray);
+        var self = this;
+
+        axios.post(baseUrl + '/doBundleAction', {
+            id: strarray,
+            doAction: this.state.selectedAction,
+            shop: store.get('shopName'),
+            })
+        .then(function (response) {
+            if (response.data.responseCode == 200 || response.data.responseCode == 400) {
+                console.log("done");
+                var data = [];
+                var ddd = [];
+                data = response.data.data;
+                data.map((d, i) => {
+                    console.log(d._id)
+                    if(d.status==0){ var bd_status = "Disabled"; } else{var bd_status= "Enabled";}
+                    ddd[i] = {
+                        "id": d._id,
+                        "view": <Icon source={ViewMajor} color="decorative" color="base" />,
+                        "bundle_detail": d.bundleName,
+                        "bundle_tag": d.bundleTag,
+                        "bundle_date":  d.createdAt,
+                        "bundle_status": bd_status,
+                        "rid": d._id,
+                        "edit": <Button primary onClick={() => { store.set('bId', d._id); router.push('/edit-bundle-step-one'); } } ><Icon source={EditMajor} color="primary" /></Button>,
+                        "stats": <Button><Icon source={AnalyticsMajor} color="primary" /></Button>
+                    }
+                })
+
+                self.setState({ data: ddd });
+                self.setState({ showModalAction: false });
+                self.setState({ selectedAction: false });
+                self.setState({ toggledClearRows: true });
+            }
+        })
+        .catch(function (error) {
+             console.log(error);
+        })
+        //self.setState({ redirect: true }, function () { })
+    }
+
+    render() {
+
+        const redirectToEditPage = () => {
+
+        }
+
+        console.log(this.state)
+        const { search, filter, SelectedTag, SelectedType, SelectedName, SelectedDate, showModal, showModalAction, selectedAction, activepopover } = this.state;
+
+        return (
+            <React.Fragment>
+                <AppNavigation />
+
+                {/* DontHaveBundles */}
+
+                <Page>
+
+                    <Query query={GET_SHOP_NAME} >
+                        {({ data, loading, error }) => {
+                            if (loading) return <div>Loading…</div>;
+                            if (error) return <div>{error.message}</div>;
+                            if (data) {
+                                if (this.state.shopName == '') {
+                                    store.set('shopName', data.shop.myshopifyDomain)
+                                    this.setState({ shopName: data.shop.myshopifyDomain }, function () { })
+                                    this.getBundlesByShop();
+                                }
+                            }
+                            return null;
+
+                        }}
+                    </Query>
+
+                    {/* Don't Have bundle section */}
+
+                    {!data ?
+                        <div>
+                            <Layout>
+                                <Layout.Section>
+                                    <div className="text_left info">
+                                        <Card sectioned>
+                                            <p className="bundle_design">You can customize your budle not just in terms of functionality but also looks. At [our app name here] looks are important so we want you to get the most attractive looking bundle there with the help of our built in editor. You can change colors, fonts, discount displays and buttons display so it fits seamlessly with your Shopify store theme and grabs the attention of your customers.
+                                             </p>
+
+                                        </Card>
+                                    </div>
+                                </Layout.Section>
+                            </Layout>
+
+                            <br />
+                            {/* <br /> */}
+
+                            <Layout>
+                                <Layout.Section oneHalf>
+                                    <div className="text_center image">
+                                        <Card sectioned>
+                                            <TextStyle variation="subdued">GIF here showing what you can customize in your bundle from when the app is ready and you can create them - hwo you can chance the color, font etc. and show it in the form of screenshots from the next step from here
+                                             </TextStyle>
+                                        </Card>
+                                    </div>
+                                </Layout.Section>
+
+                                <Layout.Section oneHalf>
+                                    <div className="festures-list">
+                                        <Card sectioned>
+                                            <TextContainer>
+                                                <List type="bullet">
+                                                    <List.Item>Feature 1 you can do to customize</List.Item>
+                                                    <List.Item>Feature 2 you can do to customize</List.Item>
+                                                    <List.Item>Feature 3 you can do to customize</List.Item>
+                                                    <List.Item>Feature 4 you can do to customize</List.Item>
+                                                    <List.Item>Feature 5 you can do to customize</List.Item>
+                                                </List>
+                                                <Link href="/add-bundle-step-one">
+                                                    <Button primary>Start my bundle</Button>
+                                                </Link>
+                                            </TextContainer>
+                                        </Card>
+                                    </div>
+                                </Layout.Section>
+                            </Layout>
+                        </div>
+                    :
+                        <div>
+                            {/* -----------------------------
+                                Have bundle section
+                            -----------------------------*/}
+                            <Layout>
+                                <Layout.Section>
+                                    <Card sectioned>
+                                        <TextContainer>
+                                            <p className="bundle_design">You have 2 desgin edit options with [app name]. you can edit each individual bundle by choosing one of the bundles bellow and click on the “icon here suggesting edit”. You can see all changes real time in the preview window we offer for easy visualization because we want you to be sure that what you want is what you see.</p> 
+                                            <p className="bundle_design">Alternativelly if you want to edit bundles in bulk you can choose all, select some from the list of filter by tags and edit them by clicking master edit bundles and then you can make your selection. The changes will be applied to all bundles selected</p>
+                                            <p className="bundle_design">You can consult our instrucitonal videos below to get familiar with the functionalities</p> 
+                                        </TextContainer>
+                                        <hr/>
+                                        
+                                        <div className="divoneHalf">
+                                            <MediaCard
+                                                title="Lorem ipsum dollar sit amet"
+                                                primaryAction={{
+                                                    content: 'Learn more',
+                                                    onAction: () => { },
+                                                }}
+                                                description={`Proin eget tortor risus. Curabitur aliquet quam id dui posuere blandit. Donec rutrum congue leo eget malesuada.`}
+                                            >
+                                                <VideoThumbnail
+                                                    videoLength={80}
+                                                    thumbnailUrl="https://burst.shopifycdn.com/photos/business-woman-smiling-in-office.jpg?width=1850"
+                                                />
+                                            </MediaCard>
+                                        </div>
+
+                                        <div className="divoneHalf">
+                                            <MediaCard
+                                                title="Lorem ipsum dollar sit amet"
+                                                primaryAction={{
+                                                    content: 'Learn more',
+                                                    onAction: () => { },
+                                                }}
+                                                description={`Proin eget tortor risus. Curabitur aliquet quam id dui posuere blandit. Donec rutrum congue leo eget malesuada.`}
+                                            >
+                                                <VideoThumbnail
+                                                    videoLength={80}
+                                                    thumbnailUrl="https://burst.shopifycdn.com/photos/business-woman-smiling-in-office.jpg?width=1850"
+                                                />
+                                            </MediaCard>
+                                        </div>
+                                        
+                                        <div className="divButtonLink">
+                                            <Button primary onClick={(e) => this.handleModal(e, 'bundle_visible')}>Master edit Confirmation</Button>
+                                        </div>
+
+                                        <div className="bundlelist">
+                                            <Form onSubmit={this.handleSubmit}>
+                                                <FormLayout>
+                                                    {/* <FormLayout.Group condensed> */}
+                                                    <Stack spacing="extraTight">
+                                                        <Stack.Item>
+                                                            { isSelected ?
+                                                                <div className="text_right">
+                                                                    <div className="selectdiv">
+                                                                    <Select
+                                                                        label="Action"
+                                                                        labelInline
+                                                                        options={ActionOptions}
+                                                                        onChange={this.handleSelectChange('selectedAction')}
+                                                                        value={selectedAction}
+                                                                        placeholder="Action"
+                                                                    />
+                                                                    </div>
+                                                                    <div className="selectdiv">
+                                                                        <Button primary onClick={(e) => this.handleActionModal(e, 'bundle_visible')}>Apply</Button>
+                                                                    </div>
+                                                                </div>
+                                                            : <div className="">
+                                                                    <div className="selectdiv">
+                                                                    <Select
+                                                                        label="Action"
+                                                                        labelInline
+                                                                        options={ActionOptions}
+                                                                        onChange={this.handleSelectChange('selectedAction')}
+                                                                        value={selectedAction}
+                                                                        placeholder="Action" disabled
+                                                                    />
+                                                                    </div>
+                                                                    <div className="selectdiv">
+                                                                        <Button primary onClick={(e) => this.handleActionModal(e, 'bundle_visible')} disabled>Apply</Button>
+                                                                    </div>
+                                                                </div>
+                                                            }
+                                                        </Stack.Item>
+                                                        <Stack.Item fill>
+                                                            <TextField
+                                                                label=""
+                                                                value={search}
+                                                                onChange={this.btnaction_two('search')}
+                                                                prefix={<Icon source={SearchMinor} color="base" />}
+                                                                id="search"
+                                                                type="search"
+                                                                placeholder="Search"
+                                                            />
+                                                        </Stack.Item>
+                                                        <Stack.Item>
+                                                            <Select
+                                                                label=""
+                                                                options={this.state.nameOptions}
+                                                                onChange={this.handleChange('SelectedName')}
+                                                                value={SelectedName}
+                                                            />
+                                                        </Stack.Item>
+                                                        <Stack.Item>
+                                                            <Select
+                                                                label=""
+                                                                options={this.state.dateOptions}
+                                                                onChange={this.handleChange('SelectedDate')}
+                                                                value={SelectedDate}
+                                                            />
+                                                        </Stack.Item>
+                                                    </Stack>
+                                                </FormLayout>
+                                            </Form>
+                                            
+
+                                            <DataTable
+                                                title=""
+                                                columns={columns}
+                                                data={this.state.data}
+                                                selectableRows
+                                                onSelectedRowsChange={this.handleChange1}
+                                                clearSelectedRows={this.state.toggledClearRows}
+                                                pagination={true}
+                                                responsive={true}
+                                            />
+                                        </div>
+                                    </Card>
+                                    <div style={{ height: '100px' }}>
+                                        <Modal
+                                            // activator={<Button >Open</Button>}
+                                            large
+                                            open={showModal}
+                                            onClose={() => this.setState({ showModal: !this.state.showModal })}
+                                            title="Confirm Bundles"
+                                            
+                                        >
+                                            <Modal.Section>
+                                                { isSelected ?
+                                                    <Stack vertical>
+                                                        <Stack.Item>
+                                                          <TextContainer>
+                                                            <Button>{SelectedBundlelength} Selected</Button> 
+                                                            <DataTable
+                                                                title=""
+                                                                columns={popupcolumns}
+                                                                data={this.state.selectdBundles}
+                                                                pagination={true}
+                                                                noHeader={true}
+                                                                responsive={true}
+                                                            />
+
+                                                            {/*<table className="w-100">
+                                                                <thead>
+                                                                    <tr>
+                                                                        <th>View</th>
+                                                                        <th>Title</th>
+                                                                        <th>Tags</th>
+                                                                        <th>Date</th>
+                                                                        <th>Edit</th>
+                                                                        <th>Stats</th>
+                                                                    </tr>
+                                                                </thead>
+                                                                {this.state.selectdBundles ? 
+                                                                    this.state.selectdBundles.map((data,index)=> {
+                                                                        
+                                                                        return(
+                                                                            <tr>
+                                                                                <td><Icon source={ViewMajor} color="decorative" color="base" /></td>
+                                                                                <td>{data.bundle_detail}</td>
+                                                                                <td>{data.bundle_tag}</td>
+                                                                                <td>{data.bundle_date}</td>
+                                                                                <td>
+                                                                                    <Button primary onClick={() => { store.set('bId', data.rid); router.push('/edit-bundle-step-one'); }}>
+                                                                                        <Icon source={EditMajor} color="primary" />
+                                                                                    </Button>
+                                                                                </td>
+                                                                                <td><Button><Icon source={AnalyticsMajor} color="primary" /></Button></td>
+                                                                            </tr>
+                                                                        )
+                                                                    }) : null
+
+                                                                }
+                                                            </table>*/}
+                                                            
+                                                            {/*this.selectedBundleTable*/}
+                                                          </TextContainer>
+                                                        </Stack.Item>
+                                                        <Stack.Item fill>
+                                                            
+                                                        <div className="modalButton mt_2">
+                                                            <div className="btn-left">
+                                                                <Button onClick={() => this.setState({ showModal: !this.state.showModal })}> Keep editing bundle selection</Button>
+                                                            </div>
+                                                            <div className="btn-right">                          
+                                                                <Button primary onClick={() => { router.push('/master-bundles-settings'); }}> Confirm and Start Master Edit </Button>                          
+                                                            </div>
+                                                        </div>
+                                                        </Stack.Item>
+                                                    </Stack>
+                                                    :
+                                                    <Stack vertical>
+                                                        <Stack.Item>
+                                                            <TextContainer>
+                                                            <p>
+                                                                 0 Bundle Selected, Please select atleast one bundle to continue.
+                                                            </p>
+                                                            </TextContainer>
+                                                            <div className="modalButton mt_2">
+                                                                <div className="btn-left">
+                                                                    <Button onClick={() => this.setState({ showModal: !this.state.showModal })}> Select bundles</Button>
+                                                                </div>
+                                                            </div>
+                                                        </Stack.Item>
+                                                        <Stack.Item fill>
+                                                        </Stack.Item>
+                                                    </Stack>
+                                                }
+                                            </Modal.Section>
+                                        </Modal>
+                                    </div>
+
+                                    <div style={{ height: '100px' }}>
+                                        <Modal
+                                            // activator={<Button >Open</Button>}
+
+                                            open={showModalAction}
+                                            onClose={() => this.setState({ showModalAction: !this.state.showModalAction })}
+                                            title="Confirm Action"
+                                            
+                                        >
+                                            <Modal.Section>
+                                                <Stack vertical>
+                                                    <Stack.Item>
+                                                        <TextContainer>
+                                                        <p>
+                                                             Do you want to continue?
+                                                        </p>
+                                                        </TextContainer>
+                                                        <div className="modalButton mt_2">
+                                                            <div className="btn-left">
+                                                                <Button onClick={() => this.setState({ showModalAction: !this.state.showModalAction })}> Keep editing bundle selection</Button>
+                                                            </div>
+                                                            <div className="btn-right">                          
+                                                                <Button primary onClick={this.btnaction}> Continue</Button>                          
+                                                            </div>
+                                                        </div>
+                                                    </Stack.Item>
+                                                    <Stack.Item fill>
+                                                    </Stack.Item>
+                                                </Stack>
+                                            </Modal.Section>
+                                        </Modal>
+                                    </div>
+                                </Layout.Section>
+                            </Layout>
+                        </div>
+                    }
+
+                </Page>
+
+                <AppFooter />
+            </React.Fragment>
+        );
+    }
+}
+
+export default BundleDesign;

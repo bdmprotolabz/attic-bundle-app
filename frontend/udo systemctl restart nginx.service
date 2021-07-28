@@ -1,0 +1,12 @@
+● nginx.service - A high performance web server and a reverse proxy server
+   Loaded: loaded (/lib/systemd/system/nginx.service; enabled; vendor preset: enabled)
+   Active: inactive (dead) since Sun 2021-06-27 17:36:39 UTC; 34s ago
+     Docs: man:nginx(8)
+  Process: 26538 ExecStop=/sbin/start-stop-daemon --quiet --stop --retry QUIT/5 --pidfile /run/nginx.pid (code=exited, status=0/SUCCESS)
+ Main PID: 25686 (code=exited, status=0/SUCCESS)
+
+Jun 27 17:26:22 ip-172-31-0-235 systemd[1]: Starting A high performance web server and a reverse proxy server...
+Jun 27 17:26:22 ip-172-31-0-235 systemd[1]: nginx.service: Failed to parse PID from file /run/nginx.pid: Invalid argument
+Jun 27 17:26:22 ip-172-31-0-235 systemd[1]: Started A high performance web server and a reverse proxy server.
+Jun 27 17:36:39 ip-172-31-0-235 systemd[1]: Stopping A high performance web server and a reverse proxy server...
+Jun 27 17:36:39 ip-172-31-0-235 systemd[1]: Stopped A high performance web server and a reverse proxy server.

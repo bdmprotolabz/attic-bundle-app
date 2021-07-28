@@ -1,0 +1,646 @@
+/* margins and paddings */
+.my_1{
+    margin: 1rem 0;
+}
+.my_2{
+    margin: 2rem 0;
+}
+.my_3{
+    margin: 3rem 0;
+}
+.my_4{
+    margin: 4rem 0;
+}
+.mx_1{
+    margin: 0 1rem;
+}
+.mx_2{
+    margin: 0 2rem;
+}
+.mx_3{
+    margin: 0 3rem;
+}
+.mx_4{
+    margin: 0 4rem;
+}
+.m_1{
+    margin: 1rem;
+}
+.m_2{
+    margin: 2rem;
+}
+.m_3{
+    margin: 3rem;
+}
+.m_4{
+    margin: 4rem;
+}
+.mr_1{
+    margin-right: 1rem;
+}
+#mr_1{
+    margin-right: 1rem;
+}
+.mt_1{
+    margin-top: 1rem;
+}
+.mt_2{
+    margin-top: 2rem;
+}
+.mt_3{
+    margin-top: 3rem;
+}
+.mt_4{
+    margin-top: 4rem;
+}
+.mb_1{
+    margin-bottom: 1rem;
+}
+.mb_2{
+    margin-bottom: 2rem;
+}
+.mb_3{
+    margin-bottom: 3rem;
+}
+.mb_4{
+    margin-bottom: 1rem;
+}
+.py_1{
+    padding: 1rem 0;
+}
+.py_2{
+    padding: 2rem 0;
+}
+.py_3{
+    padding: 3rem 0;
+}
+.py_4{
+    padding: 4rem 0;
+}
+.px_1{
+    padding: 0 1rem;
+}
+.px_2{
+    padding: 0 2rem;
+}
+.px_3{
+    padding: 0 3rem;
+}
+.px_4{
+    padding: 0 4rem;
+}
+.p_1{
+    padding: 1rem;
+}
+.p_2{
+    padding: 2rem;
+}
+.p_3{
+    padding: 3rem;
+}
+.p_4{
+    padding: 4rem;
+}
+.pb_1{
+    padding-bottom: 1rem;
+}
+.pb_2{
+    padding-bottom: 2rem;
+}
+.pb_3{
+    padding-bottom: 3rem;
+}
+.pb_4{
+    padding-bottom: 4rem;
+}
+.pt_1{
+    padding-top: 1rem;
+}
+.pt_2{
+    padding-top: 2rem;
+}
+.pt_3{
+    padding-top: 3rem;
+}
+.pt_4{
+    padding-top: 4rem;
+}
+.padding_10{
+    padding: 10px;
+}
+
+.mb_25{
+    margin-bottom: 25px;
+}
+/* margins and paddings */
+
+.hr {
+    border-top: 1px solid #d4d4d4;
+    /* margin: 30px 0; */
+}
+.display_inline{
+    display: inline-block;
+}
+.float_right{
+    float: right;
+}
+.main_navigation{
+    background: #FFC453;
+    color: #333333;
+}
+.main_navigation .display_inline{
+    font-size: 14px;
+    padding: 20px 16px;
+}
+.main_navigation .display_inline img{
+    width: 14px;
+}
+.main_navigation .display_inline a{
+    color: #000;
+    text-decoration: none; 
+}
+
+.text_right{
+    text-align: right;
+}
+.text_center{
+    text-align: center;
+}
+.disp_inline span{
+    display: inline-block;
+}
+.footer{
+    margin: 20px 0px;
+}
+.overflow_hidden {
+    overflow: hidden;
+}
+.transition_scale {
+    transition-duration: 1.9s;
+}
+.transition_scale:hover, .dont_have_bundle:hover img {
+    transform: scale(1.2);
+}
+.border{
+    border: 1px solid #e0e0e0;
+}
+.box_shadow{
+    box-shadow: 0px 0px 8px 0px #5f5f5f;
+}
+.border_radius {
+    border-radius: 10px;
+}
+.font_25{
+    font-size: 25px;    
+}
+.cstm_card{
+    background: white;
+    padding: 2rem;
+    border-radius: 3px;
+    box-shadow: var(--p-card-shadow, 0 0 0 1px rgba(63, 63, 68, 0.05), 0 1px 3px 0 rgba(63, 63, 68, 0.15));
+}
+.per_70 {
+    width: 70%;
+    float: left;
+}
+.per_30 {
+    width: 30%;
+    float: left;
+}
+.mt_7 {
+    margin-top: 7px;
+}
+.flex-container {
+    padding: 0;
+    margin: 0;
+    list-style: none;
+    /* border: 1px solid silver; */
+    -ms-box-orient: horizontal;
+    display: -webkit-box;
+    display: -moz-box;
+    display: -ms-flexbox;
+    display: -moz-flex;
+    display: -webkit-flex;
+    display: flex;
+}  
+.flex-item {
+    /* background: tomato; */
+    /* padding: 5px; */
+    /* width: 100px; */
+    /* height: 100px; */
+    margin: 10px;
+    /* line-height: 100px; */
+    font-weight: bold;
+    /* font-size: 2em; */
+    text-align: center;
+}
+.wrap { 
+    -webkit-flex-wrap: wrap;
+    flex-wrap: wrap;
+} 
+.add_bundle_nav {
+    margin-top: 20px;
+    background: #393E41;
+    box-shadow: 0px 2px 1px rgba(0, 0, 0, 0.05), 0px 0px 1px rgba(0, 0, 0, 0.25);
+}
+.text_white{
+    color: white;
+}
+
+.text_green{
+    color: darkgreen;
+}
+.text_danger{
+    color: red;
+}
+.add_bundle_add_product_section .header {
+    text-align: center;
+    background: #DFE3E8;
+    padding: 10px 0px;
+}
+.add_bundle_add_product_section .body {
+    height: 300px;
+    overflow: scroll;
+}
+.input_date{
+    width: 100%;
+    height: 40px;
+    border: 1px solid #aeb4b9;
+    border-radius: 6px;
+    font-weight: 400;
+    line-height: 2.4rem;
+    text-transform: none;
+    letter-spacing: normal;
+    min-height: 3.6rem;
+    margin: 0;
+    padding: 0.5rem 1.2rem;
+}
+.mt_17{
+    margin-top: 17px;
+}
+.step_two_del_btn{
+    margin-top: 23px;
+}
+.inputColor {
+    width: 100%;
+    height: 30px;
+}
+.antonio {font-family: 'Antonio', sans-serif;}
+.lato {font-family: 'Lato', sans-serif;}
+.lobster{font-family: 'Lobster', cursive; }
+.nunito{font-family: 'Nunito', sans-serif;}
+.opensans{font-family: 'Open Sans', sans-serif;}
+.poppins{font-family: 'Poppins', sans-serif;}
+.raleway{font-family: 'Raleway', sans-serif;}
+.roboto{font-family: 'Roboto', sans-serif;}
+
+.primary_polaris{
+    font-weight: 600;
+    font-size: 1.5rem;
+    width: 100%;
+    padding: 0.7rem 1.6rem;
+    background: #228060;
+    border: 1px solid #228060;
+    border-radius: 4px;
+    color: white;
+}
+.primary_polaris:hover{
+    background: #1C6E52;
+    border: 1px solid #1C6E52;   
+    cursor: pointer;
+}
+.primary_polaris.light_green{
+    background: #DEEFEA;
+    border: 1px solid #DEEFEA;  
+    color: #393E41;
+}
+.bundle_page_head_card{
+    color: #228060cf;
+    font-size: 17px;
+    letter-spacing: 2px;
+    line-height: 22px;
+}
+.bundle_design{
+    font-family: "SF Pro Text";
+    font-style: normal;
+    font-weight: 600;
+    font-size: 14px;
+    line-height: 20px;
+    color: #333333;
+    opacity: 75%;
+}
+.festures-list li {
+    margin-bottom: 20px;
+    color: #333333;
+    opacity: 75%;
+}
+.text_center.image .Polaris-Card__Section {
+    padding: 50px 50px 140px;
+    background: #ffffff;
+}
+.text_left.info .Polaris-Card__Section {
+    padding: 30px;
+}
+.text_left.info .bundle_design{
+    line-height: 25px;
+}
+.divoneHalf {
+    width: 45%;
+    display: inline-block;
+    margin: 20px 20px;
+}
+.divButtonLink {
+    text-align: center;
+    margin: 20px;
+}
+.ContentSection {
+    padding: 10px 20px;
+    width: 60%;
+    display: inline-block;
+    text-align: right;
+}
+.ContentSection2 {
+    width: 32%;
+    display: inline-block;
+    padding: 10px 0px;
+    text-align: left;
+}
+button.danger{
+    color:red;
+}
+.btn-right{
+    float: right;
+}
+.btn-left {
+    float: left;
+}
+.w-100 {
+    width: 100%;
+}
+.w-50{
+    width: 50%;
+}
+.selectedAction {
+    width: fit-content;
+    text-align: left;
+    min-width: 120px;
+    margin: 10px 0px; 
+    float: left;
+}
+.selectedAction .Polaris-Labelled__LabelWrapper {
+    display: none;
+}
+.selectdiv {
+    float: left;
+    margin-right: 10px;
+}
+.sub-heading{
+    font-family: SF Pro Text;
+    font-style: normal;
+    font-weight: normal;
+    font-size: 14px;
+    line-height: 20px;
+    color: #6D7175;
+}
+.Polaris-Page.Polaris-Page--fullWidth{
+    background: #fff;
+    margin: 0px;
+    width: 100% !important;
+    max-width: 100%;
+}
+.section-start .Polaris-Card__Section {
+    padding-top: 5px !important;
+}
+.section-media{
+    max-height: 565px;
+    overflow-y: scroll;
+    padding-bottom: 30px;
+}
+.articlelist a {
+    color: #000000;
+    text-decoration: none;
+}
+
+.articlelist .rdt_TableHeadRow .zmfZH {
+    font-size: 18px !important;
+}
+
+.articlelist .jMdbjj {
+    /*display: none !important;*/
+}
+
+.articlelist form {
+    margin-bottom: 15px;
+}
+
+input#messageInput{
+    border-radius: 30px !important;
+    height: 44px;
+    width: 79%;
+    margin-right: 10px;
+    border: 1px solid #ccc;
+    background: #ddd;
+    padding: 15px;
+}
+.preMessage, .botMessage {
+    border-radius: 30px !important;
+    height: 50px;
+    width: 90%;
+    margin: 10px 0px;
+    border: 1px solid #ccc;
+    background: #008060;
+    padding: 7px 20px;
+    color: #fff;
+    line-height: 17px;
+    float: left;
+    font-size: 13px;
+}
+.messagesSection {
+    min-height: 270px;
+    max-height: 300px;
+    overflow: auto;
+}
+
+.merchantMessage {
+    border-radius: 30px !important;
+    width: 90%;
+    margin: 10px 0px;
+    border: 1px solid #ccc;
+    background: #ddd;
+    padding: 7px 20px;
+    color: #000;
+    line-height: 18px;
+    float: right;
+    height: auto;
+    min-height: 50px;
+    overflow: auto;
+    font-size: 13px;
+}
+input#messageInput:focus-visible {
+    outline: none;
+}
+.proto span.Polaris-Badge.Polaris-Badge--progressComplete {
+    float: right;
+}
+h2.Polaris-Heading.proto {
+    margin-top: 10px;
+}
+.Polaris-MediaCard {
+    display: block;
+}
+.Polaris-Card {
+    width: 95%;
+}
+.Polaris-MediaCard__InfoContainer .Polaris-Card__Section {
+    padding: 10px;
+}
+.section-media-inside {
+    float: right;
+    margin-left: 20px;
+}
+.section-media-inside .Polaris-Card {
+    width: 100%;
+}
+h1.Polaris-Heading {
+    font-size: 2.2rem;
+}
+.settingsIcon {
+    width: 7%;
+    float: left;
+    min-height: 60px;
+    padding: 20px;
+    text-align: center;
+}
+.settingsHeading {
+    float: left;
+    width: 78%;
+    min-height: 50px;
+    padding: 10px;
+}
+.settingsEdit {
+    float: left;
+    width: 15%;
+    min-height: 60px;
+    text-align: right;
+    padding: 10px 30px 0px 0px;
+}
+.settings-section-start {
+    margin: 50px 0px;
+    float: left;
+    min-height: 300px;
+}
+.paymentSettings .settingsIcon, .paymentSettings .settingsHeading, .paymentSettings .settingsEdit{
+    background: #f6f6f7;
+}
+.paymentSettings, .cartSettings {
+    border: 1px solid #ddd;
+    float: left;
+    width: 100%;
+}
+.generalSettings {
+    border-left: 1px solid #ddd !important;
+    border-right: 1px solid #ddd;
+    float: left;
+    width: 100%;
+}
+.chargesdetail{
+    float: right;
+    font-weight: 400;
+}
+.paymentSettings .settingsIcon a, .paymentSettings .settingsHeading a, .paymentSettings .settingsEdit a, .settingsEdit a {
+    color: #000;
+    text-decoration: none;
+}
+.cart-tip-image {
+    max-width: 20%;
+    border-radius: 5px;
+    box-shadow: 0px 0px 3px #dfe3e8;
+    margin: 10px 0 10px 0;
+    cursor: pointer;
+    display: block;
+    transition: box-shadow 0.2s;
+}
+.cart-tip-image--big {
+    max-width: 100%;
+}
+/*Sqitch button css*/
+.switch {
+  position: relative;
+  display: inline-block;
+  width: 60px;
+  height: 34px;
+}
+
+.switch input { 
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #ccc;
+  -webkit-transition: .4s;
+  transition: .4s;
+}
+
+.slider:before {
+  position: absolute;
+  content: "";
+  height: 26px;
+  width: 26px;
+  left: 4px;
+  bottom: 4px;
+  background-color: white;
+  -webkit-transition: .4s;
+  transition: .4s;
+}
+
+input:checked + .slider {
+  background-color: #2196F3;
+}
+
+input:focus + .slider {
+  box-shadow: 0 0 1px #2196F3;
+}
+
+input:checked + .slider:before {
+  -webkit-transform: translateX(26px);
+  -ms-transform: translateX(26px);
+  transform: translateX(26px);
+}
+
+/* Rounded sliders */
+.slider.round {
+  border-radius: 34px;
+}
+
+.slider.round:before {
+  border-radius: 50%;
+}
+h1#heading-settings {
+    padding: 50px 30px 0px;
+    width: 100%;
+}
+.label_bold label {
+    font-weight: bold;
+}
+a.productLink {
+    text-decoration: none;
+}
+.plusSymbol {
+    text-align: left;
+    margin-left: 10%;
+}
+.imageContainer img {
+    width: 75px;
+}
+.product-container p {
+    text-align: left;
+    width: 160px;
+}
